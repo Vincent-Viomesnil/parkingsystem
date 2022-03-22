@@ -20,7 +20,7 @@ public class FareCalculatorService {
 
         if (ticketDAO.getTickets(ticket.getVehicleRegNumber()) > 1) {
             ratio = 0.95;
-            System.out.println("Nbticket supérieur à 1");
+            System.out.println("Nbtickets supérieur à 1");
         } else {
             ratio = 1;
             System.out.println("Nbticket inférieur ou égal à 1");
