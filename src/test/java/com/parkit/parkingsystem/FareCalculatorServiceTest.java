@@ -2,6 +2,7 @@ package com.parkit.parkingsystem;
 
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -161,6 +162,27 @@ public class FareCalculatorServiceTest {
         //Then/Assert
         assertEquals((0 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice()); //le tarif pour 30 minutes de parking est égale à 0"
 
+    }
+
+    @Test
+    public void calculateFareForRecurringUsers() {
+        //Given/Arrange
+        Date inTime = new Date();
+        Date outTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+
+        TicketDAO ticketDAO = new TicketDAO();
+
+        //When/Act
+        fareCalculatorService.calculateFare(ticket); /* ticket.setPrice() */
+        ticketDAO.getTickets(ticket.getVehicleRegNumber());
+
+        //Then/Assert
+        assertEquals((0.95 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice()); /* Réduction de 5% du ticket si utilisateur récurrent */
     }
 }
 
