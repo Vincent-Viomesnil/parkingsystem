@@ -3,6 +3,7 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
@@ -17,12 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FareCalculatorServiceTest {
 
+    private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
+    private static TicketDAO ticketDAOTest;
+
 
     @BeforeAll
     private static void setUp() {
+        ticketDAOTest = new TicketDAO();
+        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
         fareCalculatorService = new FareCalculatorService();
+        fareCalculatorService.ticketDAO = ticketDAOTest;
     }
 
     @BeforeEach
@@ -41,7 +48,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
+        assertEquals(Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
     }
 
     @Test
@@ -55,7 +62,7 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
+        assertEquals(Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
     }
 
     @Test
@@ -128,7 +135,7 @@ public class FareCalculatorServiceTest {
 
     @Test
     public void calculateFareCarWith30MinFree() {
-        //Given/Arrange
+        //Arrange
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (29 * 60 * 1000));//30 minutes parking time should give 0 fee
         Date outTime = new Date();
@@ -137,16 +144,16 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
 
-        //When/Act
+        //Act
         fareCalculatorService.calculateFare(ticket); /* ticket.setPrice() */
 
-        //Then/Assert
+        //Assert
         assertEquals((0 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice()); /* le tarif pour 30 minutes de parking est égale à 0 */
     }
 
     @Test
     public void calculateFareBikeWith30MinFree() {
-        //Given/Arrange
+        //Arrange
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (29 * 60 * 1000));//30 minutes parking time should give 0 fee
         Date outTime = new Date();
@@ -156,17 +163,17 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
 
-        //When/Act
+        //Act
         fareCalculatorService.calculateFare(ticket);
 
-        //Then/Assert
+        //Assert
         assertEquals((0 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice()); //le tarif pour 30 minutes de parking est égale à 0"
 
     }
 
     @Test
     public void calculateFareForRecurringUsers() {
-        //Given/Arrange
+        //Arrange
         Date inTime = new Date();
         Date outTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
@@ -174,14 +181,15 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber("ABCD");
 
-        TicketDAO ticketDAO = new TicketDAO();
+        ticketDAOTest.saveTicket(ticket);
+        ticketDAOTest.saveTicket(ticket);
 
-        //When/Act
+        //Act
         fareCalculatorService.calculateFare(ticket); /* ticket.setPrice() */
-        ticketDAO.getTickets(ticket.getVehicleRegNumber());
 
-        //Then/Assert
+        //Assert
         assertEquals((0.95 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice()); /* Réduction de 5% du ticket si utilisateur récurrent */
     }
 }
