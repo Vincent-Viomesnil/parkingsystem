@@ -181,10 +181,8 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("ABCD");
-
-        ticketDAOTest.saveTicket(ticket);
-        ticketDAOTest.saveTicket(ticket);
+        ticket.setVehicleRegNumber("ABC");
+        ticket.setRecurringUser(true);
 
         //Act
         fareCalculatorService.calculateFare(ticket); /* ticket.setPrice() */

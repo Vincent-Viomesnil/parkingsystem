@@ -19,12 +19,8 @@ public class FareCalculatorService {
 
         double ratio = 1;
 
-        if (ticketDAO.getTickets(ticket.getVehicleRegNumber()) > 1) {
+        if (ticket.getRecurringUser() == true) {
             ratio = 0.95;
-            System.out.println("Nbtickets supérieur à 1");
-        } else {
-            ratio = 1;
-            System.out.println("Nbticket inférieur ou égal à 1");
         }
 
         //TODO: Some tests are failing here. Need to check if this logic is correct

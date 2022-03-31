@@ -9,6 +9,7 @@ public class Ticket {
     private double price;
     private Date inTime;
     private Date outTime;
+    private boolean recurringUser;
 
     public int getId() {
         return id;
@@ -32,6 +33,14 @@ public class Ticket {
 
     public void setVehicleRegNumber(String vehicleRegNumber) {
         this.vehicleRegNumber = vehicleRegNumber;
+    }
+
+    public boolean getRecurringUser() {
+        return recurringUser;
+    }
+
+    public void setRecurringUser(boolean recurringUser) {
+        this.recurringUser = recurringUser;
     }
 
     public double getPrice() {
