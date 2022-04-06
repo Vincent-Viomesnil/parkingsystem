@@ -172,7 +172,7 @@ public class FareCalculatorServiceTest {
     }
 
     @Test
-    public void calculateFareForRecurringUsers() {
+    public void calculateFareForRecurringUsersCar() {
         //Arrange
         Date inTime = new Date();
         Date outTime = new Date();
@@ -189,6 +189,26 @@ public class FareCalculatorServiceTest {
 
         //Assert
         assertEquals((0.95 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice()); /* Réduction de 5% du ticket si utilisateur récurrent */
+    }
+
+    @Test
+    public void calculateFareForRecurringUsersBike() {
+        //Arrange
+        Date inTime = new Date();
+        Date outTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber("321BCA");
+        ticket.setRecurringUser(true);
+
+        //Act
+        fareCalculatorService.calculateFare(ticket); /* ticket.setPrice() */
+
+        //Assert
+        assertEquals((0.95 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice()); /* Réduction de 5% du ticket si utilisateur récurrent */
     }
 }
 

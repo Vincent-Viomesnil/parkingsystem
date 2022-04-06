@@ -34,6 +34,7 @@ public class ParkingServiceTest {
     @Mock
     private static TicketDAO ticketDAO;
 
+
     @BeforeEach
     private void setUpPerTest() {
         try {
@@ -66,13 +67,27 @@ public class ParkingServiceTest {
     @Test
     public void recurringUserTest() {
 
-
         //GIVEN
-        when(ticketDAO.getTickets("ABCDEF")).thenReturn(1);
-
+        when(ticketDAO.getTickets("ABCDEF")).thenReturn(2);
 
         //THEN
-        assertThat(parkingService.isRecurringVehicle("ABCDEF")).isEqualTo(true);
+        assertThat(parkingService.isRecurringVehicle("ABCDEF")).isTrue();
+
+        //assertTrue(parkingService.isRecurringVehicle("ABCDEF"));
 
     }
+
+    @Test
+    public void incomingVehicleTest() {
+        // CalculatorService initialise déjà FareCalculatorService fareCalculatorService = new FareCalculatorService() //
+        // on veut tester CalculatorService indépendamment de Farecalculator //
+        // Mocker Farecalculator //
+
+
+        when(inputReaderUtil.readSelection()).thenReturn(1);
+        when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+        parkingService.processIncomingVehicle();
+        verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
+    }
 }
+

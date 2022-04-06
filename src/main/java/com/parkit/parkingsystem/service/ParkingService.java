@@ -44,13 +44,14 @@ public class ParkingService {
                 ticket.setPrice(0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
-                if ((isRecurringVehicle(vehicleRegNumber)) == true) {
+                ticketDAO.saveTicket(ticket);
+                if ((ticketDAO.getTickets(vehicleRegNumber)) > 1) {
                     ticket.setRecurringUser(true);
                     System.out.println("Welcome back !");
                 } else {
                     ticket.setRecurringUser(false);
                 }
-                ticketDAO.saveTicket(ticket);
+
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
                 System.out.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is:" + inTime);
@@ -131,7 +132,7 @@ public class ParkingService {
     }
 
     public boolean isRecurringVehicle(String vehicleRegNumber) {
-        if (ticketDAO.getTickets(vehicleRegNumber) >= 1) {
+        if (ticketDAO.getTickets(vehicleRegNumber) > 1) {
             return true;
         }
         return false;
