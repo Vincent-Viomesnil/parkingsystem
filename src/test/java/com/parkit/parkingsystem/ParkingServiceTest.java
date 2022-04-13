@@ -3,6 +3,7 @@ package com.parkit.parkingsystem;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.*;
 public class ParkingServiceTest {
 
     private static ParkingService parkingService;
+    private static DataBasePrepareService dataBasePrepareService;
 
     @Mock
     private static InputReaderUtil inputReaderUtil;
@@ -51,6 +53,9 @@ public class ParkingServiceTest {
             when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
+            dataBasePrepareService = new DataBasePrepareService();
+            dataBasePrepareService.clearDataBaseEntries();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to set up test mock objects");
@@ -79,10 +84,6 @@ public class ParkingServiceTest {
 
     @Test
     public void incomingVehicleTest() {
-        // CalculatorService initialise déjà FareCalculatorService fareCalculatorService = new FareCalculatorService() //
-        // on veut tester CalculatorService indépendamment de Farecalculator //
-        // Mocker Farecalculator //
-
 
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);

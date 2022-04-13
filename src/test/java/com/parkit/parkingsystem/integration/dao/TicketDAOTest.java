@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -19,13 +20,17 @@ public class TicketDAOTest {
     private Ticket ticket;
     private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 
+    @BeforeEach
+    private void SetUpPerTest() {
+        ticketDAOTest = new TicketDAO();
+        ticket = new Ticket();
+        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
+    }
+
     @Test
     public void saveTicketDaoTest() {
         //GIVEN
-        ticketDAOTest = new TicketDAO();
-        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-        ticket = new Ticket();
         ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
@@ -37,9 +42,8 @@ public class TicketDAOTest {
 
     @Test
     public void updateTicketDAOTest() {
-        ticketDAOTest = new TicketDAO();
-        ticket = new Ticket();
-        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
+
+        //GIVEN
         ticket.setVehicleRegNumber("ABC");
         ticket.setPrice(3);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -53,10 +57,8 @@ public class TicketDAOTest {
     @Test
     public void getTicketDAOTest() {
         //GIVEN
-        ticketDAOTest = new TicketDAO();
-        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
+
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-        ticket = new Ticket();
         ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABCDEF");
@@ -68,17 +70,14 @@ public class TicketDAOTest {
     @Test
     public void getTicketsDAOTest() {
         //GIVEN
-        ticketDAOTest = new TicketDAO();
-        ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-        ticket = new Ticket();
         ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000)));
         ticket.setParkingSpot(parkingSpot);
-        ticket.setVehicleRegNumber("000"); //changer la plaque d'immatriculation à chaque test
+        ticket.setVehicleRegNumber("AAA");
         ticketDAOTest.saveTicket(ticket);
         ticketDAOTest.saveTicket(ticket);
 
         //THEN
-        assertThat(ticketDAOTest.getTickets("000")).isEqualTo(2);
+        assertThat(ticketDAOTest.getTickets("AAA")).isEqualTo(2);
     }
 }
