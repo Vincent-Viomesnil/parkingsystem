@@ -19,7 +19,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,14 +71,8 @@ public class ParkingServiceTest {
 
     @Test
     public void recurringUserTest() {
-
-        //GIVEN
         when(ticketDAO.getTickets("ABCDEF")).thenReturn(2);
-
-        //THEN
-        assertThat(parkingService.isRecurringVehicle("ABCDEF")).isTrue();
-
-        //assertTrue(parkingService.isRecurringVehicle("ABCDEF"));
+        assertTrue(parkingService.isRecurringVehicle("ABCDEF"));
 
     }
 

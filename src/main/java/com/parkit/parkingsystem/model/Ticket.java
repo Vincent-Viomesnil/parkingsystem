@@ -52,20 +52,36 @@ public class Ticket {
     }
 
     public Date getInTime() {
-        return inTime;
+        if (inTime != null) {
+            return new Date(inTime.getTime());
+        } else {
+            return null;
+        }
     }
 
     public void setInTime(Date inTime) {
-        this.inTime = new Date(inTime.getTime());
+        if (inTime != null) {
+            this.inTime = new Date(inTime.getTime());
+        } else {
+            this.inTime = null;
+        }
     }
 
+
     public Date getOutTime() {
-        return outTime;
+        if (outTime != null) {
+            return new Date(outTime.getTime());
+        } else {
+            return null;
+        }
     }
 
     public void setOutTime(Date outTime) {
-        this.outTime = new Date(outTime.getTime());
-
+        if (outTime != null) {
+            this.outTime = new Date(outTime.getTime());
+        } else {
+            this.outTime = null;
+        }
     }
 
 }

@@ -29,7 +29,6 @@ public class FareCalculatorServiceTest {
         ticketDAOTest = new TicketDAO();
         ticketDAOTest.dataBaseConfig = dataBaseTestConfig;
         fareCalculatorService = new FareCalculatorService();
-        fareCalculatorService.ticketDAO = ticketDAOTest;
     }
 
     @BeforeEach
@@ -66,7 +65,7 @@ public class FareCalculatorServiceTest {
     }
 
     @Test
-    public void calculateFareUnkownType() {
+    public void calculateFareUnknownType() {
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();
