@@ -18,7 +18,6 @@ public class DataBaseTestConfig extends DataBaseConfig {
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         InputStream input = DataBaseConfig.class.getClassLoader().getResourceAsStream("config.properties");
-
         Properties props = new Properties();
 
         try {

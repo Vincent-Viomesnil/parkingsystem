@@ -15,9 +15,7 @@ public class DataBaseConfig {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
-
         InputStream input = DataBaseConfig.class.getClassLoader().getResourceAsStream("config.properties");
-
         Properties props = new Properties();
 
         try {

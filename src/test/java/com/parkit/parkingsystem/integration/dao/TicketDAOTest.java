@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TicketDAOTest {
@@ -37,7 +38,6 @@ public class TicketDAOTest {
 
         //THEN
         assertTrue(ticketDAOTest.saveTicket(ticket));
-
     }
 
     @Test
@@ -80,4 +80,19 @@ public class TicketDAOTest {
         //THEN
         assertThat(ticketDAOTest.getTickets("AAA")).isEqualTo(2);
     }
+
+    @Test
+    public void saveTicketDaoShouldFailTest() {
+        assertThrows(RuntimeException.class, () -> {
+            ticketDAOTest.saveTicket(null);
+        });
+    }
+
+    @Test
+    public void updateTicketDaoShouldFailTest() {
+        assertThrows(RuntimeException.class, () -> {
+            ticketDAOTest.updateTicket(null);
+        });
+    }
+
 }
