@@ -1,6 +1,5 @@
 package com.parkit.parkingsystem.model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Ticket {
@@ -10,6 +9,7 @@ public class Ticket {
     private double price;
     private Date inTime;
     private Date outTime;
+    private boolean recurringUser;
 
     public int getId() {
         return id;
@@ -35,6 +35,14 @@ public class Ticket {
         this.vehicleRegNumber = vehicleRegNumber;
     }
 
+    public boolean getRecurringUser() {
+        return recurringUser;
+    }
+
+    public void setRecurringUser(boolean recurringUser) {
+        this.recurringUser = recurringUser;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -44,18 +52,37 @@ public class Ticket {
     }
 
     public Date getInTime() {
-        return inTime;
+        if (inTime != null) {
+            return new Date(inTime.getTime());
+        } else {
+            return null;
+        }
     }
 
     public void setInTime(Date inTime) {
-        this.inTime = inTime;
+        if (inTime != null) {
+            this.inTime = new Date(inTime.getTime());
+        } else {
+            this.inTime = null;
+        }
     }
 
+
     public Date getOutTime() {
-        return outTime;
+        if (outTime != null) {
+            return new Date(outTime.getTime());
+        } else {
+            return null;
+        }
     }
 
     public void setOutTime(Date outTime) {
-        this.outTime = outTime;
+        if (outTime != null) {
+            this.outTime = new Date(outTime.getTime());
+        } else {
+            this.outTime = null;
+        }
     }
+
 }
+
