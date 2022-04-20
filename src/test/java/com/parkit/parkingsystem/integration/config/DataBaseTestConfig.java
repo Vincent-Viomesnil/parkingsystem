@@ -28,7 +28,7 @@ public class DataBaseTestConfig extends DataBaseConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //username and password are securised in a properties file
         String username = props.getProperty("username");
         String password = props.getProperty("password");
 

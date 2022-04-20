@@ -18,6 +18,7 @@ public class ParkingSpotDAO {
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
     public int getNextAvailableSlot(ParkingType parkingType) {
+        //get the availability fo that parking slot depending the parkingType
         Connection con = null;
         int result = -1;
         ResultSet rs = null;

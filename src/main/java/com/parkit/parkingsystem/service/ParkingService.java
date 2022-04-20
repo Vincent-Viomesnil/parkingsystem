@@ -67,6 +67,7 @@ public class ParkingService {
     }
 
     public ParkingSpot getNextParkingNumberIfAvailable() {
+        //obtain the availability for the parking spot
         int parkingNumber = 0;
         ParkingSpot parkingSpot = null;
         try {
@@ -86,6 +87,7 @@ public class ParkingService {
     }
 
     private ParkingType getVehicleType() {
+        //get the type of vehicle between CAR and BIKE
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
         System.out.println("2 BIKE");

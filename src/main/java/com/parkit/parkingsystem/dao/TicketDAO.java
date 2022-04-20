@@ -48,6 +48,7 @@ public class TicketDAO {
     }
 
     public Ticket getTicket(String vehicleRegNumber) {
+        //get the ticket for a vehicle which have been registred
         Connection con = null;
         Ticket ticket = null;
         ResultSet rs = null;
@@ -81,6 +82,7 @@ public class TicketDAO {
     }
 
     public boolean updateTicket(Ticket ticket) {
+        //update the ticket for a vehicle already registred
         Connection con = null;
         PreparedStatement ps = null;
         try {
@@ -103,6 +105,7 @@ public class TicketDAO {
     }
 
     public int getTickets(String vehicleRegNumber) {
+        //This is the sum of the set of tickets for each vehicle
         int nbTicket = 0;
         Connection con = null;
         ResultSet rs = null;
