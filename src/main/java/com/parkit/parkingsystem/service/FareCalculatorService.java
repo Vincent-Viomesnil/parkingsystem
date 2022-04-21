@@ -14,16 +14,17 @@ public class FareCalculatorService {
         double inHour = ticket.getInTime().getTime();
         double outHour = ticket.getOutTime().getTime();
 
+        //duration between the out time and the in time in milliseconds
         double duration = outHour - inHour;
 
         double ratio = 1;
 
+        //calculation of a discount for recurring users, equal to 5%
         if (ticket.getRecurringUser() == true) {
             ratio = 0.95;
         }
 
-        //TODO: Some tests are failing here. Need to check if this logic is correct
-
+        //calculation for the users who stay more than 30 min. Fares depending on the vehicule's type
         if (duration > (30 * 60 * 1000)) {
             switch (ticket.getParkingSpot().getParkingType()) {
                 case CAR:
@@ -37,6 +38,7 @@ public class FareCalculatorService {
                     throw new IllegalArgumentException("Unknown Parking Type");
             }
         } else {
+            //Set the price to 0$ if a user stay less than 30 min
             ticket.setPrice(0);
         }
     }

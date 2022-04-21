@@ -9,19 +9,18 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@Tag("ParkingDataBaseTests")
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 
@@ -53,7 +52,6 @@ public class ParkingDataBaseIT {
     private void setUpPerTest() throws Exception {
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        // when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
         when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
         dataBasePrepareService.clearDataBaseEntries();
     }
@@ -64,50 +62,49 @@ public class ParkingDataBaseIT {
     }
 
     @Test
+    @DisplayName("check that a ticket is actually saved in Database and parking table is updated")
     public void testParkingACar() {
+
+        //GIVEN
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
 
-        //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
-
+        //WHEN
         when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
         parkingService.processIncomingVehicle();
-
         ParkingSpot parkingSpotTest = new ParkingSpot(1, ParkingType.CAR, true);
 
-
+        //THEN
         verify(parkingSpotDAO, times(1)).updateParking(parkingSpotTest);
         assertEquals(1, parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
+        verify(ticketDAO, times(1)).saveTicket(any(Ticket.class));
     }
 
     @Test
-    public void testParkingLotExit() throws Exception {
+    @DisplayName("check that the fare generated and out time are populated correctly in the database")
+    public void testParkingLotExit() {
 
-        //TODO: check that the fare generated and out time are populated correctly in the database
-
-        //Mettre la date de sortie pour process exiting vehicle
-        // Créer un nouveau ticket, saver au niveau de la base. Quand on demande un ticket on retourne le ticket
+        //GIVEN
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        ticket = new Ticket();
 
+        //WHEN
+        ticket = new Ticket();
         Date inTime = new Date();
         inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000));
         Date outTime = new Date();
-
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-
         ticket.setVehicleRegNumber("ABCDEF");
         ticket.setParkingSpot(parkingSpot);
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        ticketDAO.saveTicket(ticket);
-
         when(ticketDAO.getTicket("ABCDEF")).thenReturn(ticket);
-        when(ticketDAO.updateTicket(ticket)).thenReturn(true);
         parkingService.processExitingVehicle();
 
-        verify(parkingSpotDAO, times(2)).updateParking(any(ParkingSpot.class));
+        //THEN
+        assertEquals(1.50, ticket.getPrice());
+        assertThat(ticket.getOutTime()).isNotNull();
+        verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
     }
 }
 

@@ -6,6 +6,8 @@ import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -15,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Tag("TicketDAOTest")
 public class TicketDAOTest {
 
     private static TicketDAO ticketDAOTest;
@@ -29,6 +32,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("Save a ticket for a vehicle when he has been registered")
     public void saveTicketDaoTest() {
         //GIVEN
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -41,6 +45,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("Update a ticket with all the parameters associated ")
     public void updateTicketDAOTest() {
 
         //GIVEN
@@ -55,6 +60,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("Get a ticket not null, with the good information")
     public void getTicketDAOTest() {
         //GIVEN
 
@@ -68,6 +74,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("Calculate the number of tickets registered in the parking spot")
     public void getTicketsDAOTest() {
         //GIVEN
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
@@ -82,6 +89,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("the method saveTicket should fail with a ticket null")
     public void saveTicketDaoShouldFailTest() {
         assertThrows(RuntimeException.class, () -> {
             ticketDAOTest.saveTicket(null);
@@ -89,6 +97,7 @@ public class TicketDAOTest {
     }
 
     @Test
+    @DisplayName("the method updateTicket should fail with a ticket null")
     public void updateTicketDaoShouldFailTest() {
         assertThrows(RuntimeException.class, () -> {
             ticketDAOTest.updateTicket(null);
